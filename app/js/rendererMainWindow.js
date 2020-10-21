@@ -48,6 +48,7 @@ const btnPlay = document.getElementById("btn_play");
 const btnPause = document.getElementById("btn_pause");
 const btnStop = document.getElementById("btn_stop");
 const btnSave = document.getElementById("btn_save");
+const btnAddData = document.getElementById("btn_addData");
 
 btnClose.onclick = function()
 {
@@ -63,7 +64,6 @@ btnMaximize.onclick = function()
 // Create Anychart graph
 
 var chartData = [];
-
 var chart = null;
 var dataSet = null;
 
@@ -124,7 +124,7 @@ anychart.onDocumentReady(function()
 
 var contador = 0;
 
-botaoAdd.addEventListener('click', function(e) {
+btnAddData.addEventListener('click', function(e) {
 
     // Adicionar dado ao gráfico
     const valor = Math.floor(Math.random() * 21);
