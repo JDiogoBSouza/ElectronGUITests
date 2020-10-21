@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>Hello World!</title>
+
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../node_modules/photonkit/dist/css/photon.css">
+    <link rel="stylesheet" href="css/styleMainWindow.css">
+
+    <!-- Scripts -->
+    <script src="../node_modules/anychart/dist/js/anychart-base.min.js"></script>
+
+
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+</head>
+
+<body>
+
+    <!-- 
+        document.write(process.versions.node)
+        document.write(process.versions.electron)
+        document.write(process.versions.chrome)
+    -->
+
+    <!-- Wrap your entire app inside .window -->
+    <div class="window">
+
+        <!-- .toolbar-header sits at the top of your app -->
+        <header class="toolbar toolbar-header">
+
+            <div class="toolbar-actions">
+                
+                <div class="btn-group">
+                    <button class="btn btn-default" id="btn_realTime">
+                        <span class="icon icon-signal icon-text"></span> Realtime
+                    </button>
+                    
+                    <button class="btn btn-default active" id="btn_ftp">
+                        <span class="icon icon-download icon-text"></span> FTP
+                    </button>
+                </div>
+
+                <div class="btn-group" id="ftpToolBar">
+
+                    <button class="btn btn-default" id="btn_openFile">
+                        <span class="icon icon-folder"></span>
+                    </button>
+
+                    <button class="btn btn-default active" id="btn_play">
+                        <span class="icon icon-play"></span>
+                    </button>
+
+                    <button class="btn btn-default active" id="btn_pause">
+                        <span class="icon icon-pause"></span>
+                    </button>
+                      
+                    <button class="btn btn-default active" id="btn_stop">
+                        <span class="icon icon-stop"></span>
+                      </button>
+                      
+                    <button class="btn btn-default active" id="btn_save">
+                        <span class="icon icon-floppy"></span>
+                    </button>
+                      
+  
+                  </div>
+
+                
+                <div class="btn-group pull-right">
+
+                    <button class="btn btn-default" id=btn_configure>
+                        <span class="icon icon-cog"></span>
+                    </button>
+
+                    <button class="btn btn-default pull-right active" id="btn_maximize">
+                        <span class="icon icon-popup"></span>
+                    </button>
+
+                    <button class="btn btn-default pull-right" id="btn_close">
+                        <span class="icon icon-cancel"></span>
+                    </button>
+
+                </div>
+
+            </div>
+
+        </header>
+
+        <!-- Your app's content goes inside .window-content -->
+        <div class="window-content">
+
+
+            <div class="pane">
+
+                <div class="padded-more">
+                        
+                    <div id="chart-container" style="width: 1280px; height: 600px;"></div>
+                    
+                    <!-- <br/>
+                    <button type="button" class="btn btn-primary" id="botaoAdd">Inserir dado</button>
+                    -->
+                    
+                </div>
+
+            </div>
+
+            
+        </div>
+
+        <footer class="toolbar toolbar-footer">
+
+            <h1 class="title">PelvwareGUI</h1>
+
+        </footer>
+        
+    </div>
+
+    <!-- Electron Javascript -->
+    <script type="module" src="./js/rendererMainWindow.js"></script>
+    
+</body>
+
+</html>

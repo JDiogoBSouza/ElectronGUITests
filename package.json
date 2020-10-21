@@ -1,0 +1,33 @@
+{
+  "name": "guitests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OboyDG/ElectronGUITests.git"
+  },
+  "keywords": [
+    "nodejs",
+    "electronjs",
+    "node",
+    "javascript",
+    "desktop"
+  ],
+  "author": "DiogoSouza",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OboyDG/ElectronGUITests/issues"
+  },
+  "homepage": "https://github.com/OboyDG/ElectronGUITests#readme",
+  "devDependencies": {
+    "electron": "^10.1.4"
+  },
+  "dependencies": {
+    "anychart": "^8.9.0",
+    "photonkit": "^0.1.2"
+  }
+}
