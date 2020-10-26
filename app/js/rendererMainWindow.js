@@ -1,5 +1,4 @@
 const {ipcRenderer} = require('electron');
-const {remote} = require('electron');
 
 // Mode buttons
 const btnRealTime = document.getElementById("btn_realTime");
@@ -8,31 +7,45 @@ const btnFtp = document.getElementById("btn_ftp");
 btnRealTime.onclick = function()
 {
     btnFtp.classList.remove("active");
+    btnFtp.disabled = false;
     btnRealTime.classList.add("active");
+    btnRealTime.disabled = true;
 
     // Active RealTime controller buttons
     btnPlay.classList.remove("active");
+    btnPlay.disabled = false;
     btnPause.classList.remove("active");
+    btnPause.disabled = false;
     btnStop.classList.remove("active");
+    btnStop.disabled = false;
     btnSave.classList.remove("active");
+    btnSave.disabled = false;
 
     // Deactive FTP Open file button
     btnOpenFile.classList.add("active");
+    btnOpenFile.disabled = true;
 };
 
 btnFtp.onclick = function()
 {
     btnRealTime.classList.remove("active");
+    btnRealTime.disabled = false;
     btnFtp.classList.add("active");
+    btnFtp.disabled = true;
 
     // Deactive RealTime controller buttons
     btnPlay.classList.add("active");
+    btnPlay.disabled = true;
     btnPause.classList.add("active");
+    btnPause.disabled = true;
     btnStop.classList.add("active");
+    btnStop.disabled = true;
     btnSave.classList.add("active");
+    btnSave.disabled = true;
 
     // Active FTP Open file button
     btnOpenFile.classList.remove("active");
+    btnOpenFile.disabled = false;
 };
 
 // System buttons
@@ -52,14 +65,13 @@ const btnAddData = document.getElementById("btn_addData");
 
 btnClose.onclick = function()
 {
-    ipcRenderer.send('close-me')
+    ipcRenderer.send('close-me');
 };
 
 btnMaximize.onclick = function()
 {
-    ipcRenderer.send('maximize-me')
+    ipcRenderer.send('maximize-me');
 };
-
 
 // Create Anychart graph
 
@@ -126,9 +138,12 @@ var contador = 0;
 
 btnAddData.addEventListener('click', function(e) {
 
+    ipcRenderer.send('openConfigOnMain');
+    
+    /*
     // Adicionar dado ao gráfico
     const valor = Math.floor(Math.random() * 21);
 
     dataSet.append({"time": contador, "value": valor});
-    contador++;
+    contador++;*/
 });

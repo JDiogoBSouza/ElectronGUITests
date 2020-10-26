@@ -24,10 +24,12 @@
   },
   "homepage": "https://github.com/OboyDG/ElectronGUITests#readme",
   "devDependencies": {
-    "electron": "^10.1.4"
+    "electron": "^10.1.4",
+    "electron-rebuild": "^2.3.2"
   },
   "dependencies": {
     "anychart": "^8.9.0",
-    "photonkit": "^0.1.2"
+    "photonkit": "^0.1.2",
+    "serialport": "^9.0.2"
   }
 }
