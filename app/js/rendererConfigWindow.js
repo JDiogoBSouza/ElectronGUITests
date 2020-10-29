@@ -10,6 +10,7 @@ const checkTime      = 1;   // Default: 1 Second
 const pelvwareBaudRate = 115200; // Default Wemos Baud Rate
 var configStatus = 0;
 var pelvwarePort = null;
+var ssidSelecionado = "";
 
 /*const port = new SerialPort('/dev/tty-usbserial1', {
     baudRate: 57600
@@ -20,12 +21,43 @@ const btnClose = document.getElementById("btn_close");
 
 // ConfigGUI Components
 const btnAutoConnect = document.getElementById("btn_autoConnect");
-const tableWifiList = document.getElementById("tab_wifiList");
-const loadingCircle = document.getElementById("loadingCircle");
 const buttomConnectInner = '<span class="icon icon-plus icon-text" id></span>Auto-Connect';
+const loadingCircle = document.getElementById("loadingCircle");
+const wifiList = document.getElementById("wifiList");
+const title = document.getElementById("title");
+const divButtons = document.getElementById("div_buttons");
 
-tableWifiList.style.display = "none";
-loadingCircle.style.display = "none";
+var boxPesquisa = document.createElement("boxPesquisa");
+boxPesquisa.type = "text";
+boxPesquisa.className = "form-control";
+boxPesquisa.placeholder = "Pesquisar";
+
+wifiList.onclick = function(event){
+
+    if (event.target.tagName != "LI") return;
+    
+    singleSelect(event.target);
+}
+
+// prevent unneeded selection of list elements on clicks
+wifiList.onmousedown = function(){
+
+    return false;
+
+};
+
+function singleSelect(li){
+
+    let selected = wifiList.querySelectorAll('.selected');
+
+    for(let elem of selected){
+        elem.classList.remove('selected');
+    }
+    
+    li.classList.add('selected');
+
+    // Valor do SSID: li.innerHTML;
+}
 
 btnClose.onclick = function()
 {
@@ -64,35 +96,33 @@ btnAutoConnect.onclick = function()
         
         btnAutoConnect.classList.add("active");
         btnAutoConnect.disabled = true;
-        tableWifiList.style.display = "none";
+        wifiList.style.display = "none";
+        title.style.display = "none";
+        divButtons.style.display = "none";
+        limparLista();
 
         tbuscaPorta = setInterval(verificarPortas, checkTime * 1000);
     }
 
 };
 
-function adicionaLinhaTabela(id, ssid){
+function adicionaLinhaLista(ssid, selected)
+{
+    let node = document.createElement("LI");                 // Create a <li> node
+    let textnode = document.createTextNode(ssid);            // Create a text node
+    node.appendChild(textnode);                              // Append the text to <li>
 
-    
-    let tbodyTableWifiList = tableWifiList.getElementsByTagName('tbody')[0];
+    if( selected )
+        node.classList.add('selected');                          // Set a node selected.
 
-    let numeroLinhas = tbodyTableWifiList.rows.length;
-    let linha = tbodyTableWifiList.insertRow(numeroLinhas);
-
-    let celula1 = linha.insertCell(0);
-    let celula2 = linha.insertCell(1);   
-
-    celula1.innerHTML = id; 
-    celula2.innerHTML =  ssid;
+    wifiList.appendChild(node);                              // Append <li> to <ul> with id="myList"
 }
 
-// funcao remove uma linha da tabela
-function removeLinhaTabela(linha) {
+function limparLista(){
 
-  var i = linha.parentNode.parentNode.rowIndex;
-  document.getElementById('tab_wifiList').deleteRow(i);
-
-}      
+    wifiList.innerHTML = "";
+    wifiList.appendChild(boxPesquisa); // put it into the DOM
+}
 
 async function verificarPortas(){
     
@@ -227,12 +257,19 @@ meuEvento.on('interromperBusca', (found, path) =>{
 
                             ssidList.forEach( ( ssid ) => {
 
-                                adicionaLinhaTabela(id, ssid);
+                                if( id == 0 )
+                                    adicionaLinhaLista(ssid, true);
+                                else
+                                    adicionaLinhaLista(ssid, false);
+                                    
                                 id++;
 
                             });
                             
-                            tableWifiList.style.display = "table";
+                            wifiList.style.display = "table";
+                            title.style.display = "block";
+                            divButtons.style.display = "block";
+                            wifiList.style.display = "table";
                             loadingCircle.style.display = "none";
                             console.log(ssidList);
                             

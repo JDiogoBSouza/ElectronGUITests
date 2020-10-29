@@ -1,6 +1,5 @@
 # Arquivos e Pastas que devem ser ignorados.
 
-node_modules/*
 node_modules/
 
 *.zip

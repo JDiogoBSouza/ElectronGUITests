@@ -68,31 +68,28 @@
 
             <div class="pane">
 
-                <div class="padded-more">
+                <div class="padded-more" id="container">
                     
-                    <div class="loader" id="loadingCircle"></div>
+                    <div class="loader" id="loadingCircle" style="display: none;"></div>
 
-                    <table class="table-striped" id="tab_wifiList">
+                    <h3 style="text-align: center; display: none;" id="title">Redes sem fio encontradas</h3>
 
-                        <thead>
-                          <tr>
-                            <th>ID</th>
-                            <th>SSID</th>
-                          </tr>
-                        </thead>
+                    <ul class="list-group" id="wifiList">
 
-                        <tbody>
-                            <tr>
-                                <td>ID1</td>
-                                <td>SSID1</td>
-                            </tr>
-                            <tr>
-                                <td>ID2</td>
-                                <td>SSID2</td>
-                            </tr>
-                        </tbody>
+                    <!-- <li class="list-group-header">
+                        <input id="boxPesquisa" class="form-control" type="text" placeholder="Pesquisar">
+                    </li> -->
+                    
+                    </ul>
 
-                      </table>
+                    <div class="center" style="display: none" id="div_buttons">
+                        
+                        <button class="btn btn-primary" id="btn_rescan">
+                            <span class="icon icon-arrows-ccw" style="color:white;"></span>
+                        </button>
+                        <button class="btn btn-positive" id="btn_connect">Conectar</button>
+
+                    </div>
 
                 </div>
 

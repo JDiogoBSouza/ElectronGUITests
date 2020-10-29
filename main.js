@@ -34,8 +34,8 @@ function createConfigWindow () {
     configWindow.show()
   })
 
-  configWindow.setFullScreen(true)
-  configWindow.webContents.openDevTools()
+  //configWindow.setFullScreen(true)
+  //configWindow.webContents.openDevTools()
 }
 
 function createMainWindow () {

@@ -1,7 +1,12 @@
+#div_buttons {
+  margin-top: 10px;
+  margin-left: 35%;
+}
+
 .loader {
     position: absolute;
     left: 35%;
-    top: 25%;
+    top: 30%;
     z-index: 1;
     border: 16px solid #f3f3f3; /* Light grey */
     border-top: 16px solid #797979; /* Grey */
@@ -11,7 +16,16 @@
     animation: spin 2s linear infinite;
   }
 
+.selected {
+  background: #797979;
+}
+
+li {
+  cursor: pointer;
+}
+
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
