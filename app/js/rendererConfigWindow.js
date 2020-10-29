@@ -2,7 +2,6 @@ const {ipcRenderer, contentTracing} = require('electron');
 const serialPort = require('serialport')
 const readline = require('@serialport/parser-readline')
 const {EventEmitter} = require('events')
-var $ = require('jQuery');
 
 class Evento extends EventEmitter{}
 
