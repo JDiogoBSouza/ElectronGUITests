@@ -1,6 +1,8 @@
 # Arquivos e Pastas que devem ser ignorados.
 
-node_modules/
+node_modules/*
+!node_modules/serialport
+!node_modules/serialport/*
 
 *.zip
 *.rar
