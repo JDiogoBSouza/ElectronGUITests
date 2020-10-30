@@ -6,6 +6,7 @@ app.allowRendererProcessReuse = false;
 
 let mainWindow = null;
 let configWindow = null;
+let passwordWindow = null;
 
 function createConfigWindow () {
   
@@ -36,6 +37,37 @@ function createConfigWindow () {
 
   //configWindow.setFullScreen(true)
   //configWindow.webContents.openDevTools()
+}
+
+function createPasswordWindow () {
+  
+  let parentWindow = null;
+
+  if( configWindow != null)
+    parentWindow = configWindow;
+
+    passwordWindow = new BrowserWindow({
+    width: 300,
+    height: 200,
+    resizable: false,
+    center: true,
+    frame: false,
+    modal: true,
+    show: false,
+    parent: parentWindow,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  })
+  
+  passwordWindow.loadFile('app/passwordWindow.html')
+
+  passwordWindow.once('ready-to-show', () => {
+    passwordWindow.show()
+  })
+
+  //passwordWindow.setFullScreen(true)
+  //passwordWindow.webContents.openDevTools()
 }
 
 function createMainWindow () {
@@ -106,5 +138,34 @@ ipcMain.on('openConfigOnMain', (evt, arg) => {
 
   createConfigWindow()
   console.log("Abrindo tela de Configuracao a partir da Main.")
+
+})
+
+ipcMain.on('openPasswordOnConfig', (evt, arg) => {
+
+  createPasswordWindow()
+  console.log("Abrindo tela de Password a partir da Config.");
+
+})
+
+ipcMain.on('closePasswordWindow', (evt, arg) => {
+
+  if(passwordWindow != null)
+    passwordWindow.close()
+
+  console.log("Encerrando tela de Password.")
+
+})
+
+ipcMain.on('passwordToMain', (evt, arg) => {
+
+  if(passwordWindow != null)
+    passwordWindow.close()
+  
+  console.log("Encerrando tela de Password. Senha: " + arg)
+  
+  if( configWindow != null){
+    configWindow.webContents.send('mainPasswordToConfig', arg);
+  }
 
 })

@@ -1,16 +1,25 @@
-const {ipcRenderer, contentTracing} = require('electron');
-const serialPort = require('serialport')
-const readline = require('@serialport/parser-readline')
-const {EventEmitter} = require('events')
+const {ipcRenderer} = require('electron');
+const serialPort = require('serialport');
+const readline = require('@serialport/parser-readline');
+const {EventEmitter} = require('events');
+const ip = require('ip');
 
 class Evento extends EventEmitter{}
+const meuEvento = new Evento()
 
 const counterTimes   = 20;  // Default: 10 Times
 const checkTime      = 1;   // Default: 1 Second
 const pelvwareBaudRate = 115200; // Default Wemos Baud Rate
 var configStatus = 0;
 var pelvwarePort = null;
-var ssidSelecionado = "";
+var pelvwareIP = null;
+var ssidSelecionado = null;
+
+var tbuscaPorta = null;
+
+var firstCheck = true;
+var counter = counterTimes;
+var firstCheckValue = null;
 
 /*const port = new SerialPort('/dev/tty-usbserial1', {
     baudRate: 57600
@@ -20,17 +29,70 @@ var ssidSelecionado = "";
 const btnClose = document.getElementById("btn_close");
 
 // ConfigGUI Components
+const btnRefreshCOMS = document.getElementById("btn_refreshCOMS");
+const btnPorts = document.getElementById("btn_ports");
+const btnConnect = document.getElementById("btn_connect");
 const btnAutoConnect = document.getElementById("btn_autoConnect");
-const buttomConnectInner = '<span class="icon icon-plus icon-text" id></span>Auto-Connect';
+const buttonAutoConnectInner = '<span class="icon icon-plus icon-text" id></span>Auto-Connect';
 const loadingCircle = document.getElementById("loadingCircle");
 const wifiList = document.getElementById("wifiList");
 const title = document.getElementById("title");
 const divButtons = document.getElementById("div_buttons");
+const finishLabel = document.getElementById("finishConfig");
+
+function disableAllButtons()
+{
+    btnConnect.classList.add("active");
+    btnConnect.disabled = true;
+    btnAutoConnect.classList.add("active");
+    btnAutoConnect.disabled = true;
+    btnRefreshCOMS.classList.add("active");
+    btnRefreshCOMS.disabled = true;
+    btnPorts.classList.add("active");
+    btnPorts.disabled = true;
+}
 
 var boxPesquisa = document.createElement("boxPesquisa");
 boxPesquisa.type = "text";
 boxPesquisa.className = "form-control";
 boxPesquisa.placeholder = "Pesquisar";
+
+// Receive password from main.
+ipcRenderer.on('mainPasswordToConfig', (event, arg) => {
+    
+    if(arg){
+        
+        let msg = ssidSelecionado + ';' + arg + ';' + getMyIp();
+        
+        console.log("Enviando: " + msg);
+        pelvwarePort.write(msg);
+
+    }
+    
+    btnAutoConnect.classList.add("active");
+    btnAutoConnect.disabled = true;
+    wifiList.style.display = "none";
+    title.style.display = "none";
+    divButtons.style.display = "none";
+    loadingCircle.style.display = "block";
+
+});
+
+function getMyIp()
+{
+    return ip.address(); 
+}
+
+btnRefreshCOMS.onclick = function(event){
+}
+
+btnConnect.onclick = function(event){
+    
+    if(ssidSelecionado){
+        ipcRenderer.send('openPasswordOnConfig');
+    }
+
+}
 
 wifiList.onclick = function(event){
 
@@ -57,6 +119,7 @@ function singleSelect(li){
     li.classList.add('selected');
 
     // Valor do SSID: li.innerHTML;
+    ssidSelecionado = li.innerHTML;
 }
 
 btnClose.onclick = function()
@@ -64,13 +127,6 @@ btnClose.onclick = function()
     ipcRenderer.send('close-me');
     //ipcRenderer.send('closeConfigStartMain');
 };
-
-const meuEvento = new Evento()
-var tbuscaPorta = null;
-
-var firstCheck = true;
-var counter = counterTimes;
-var firstCheckValue = null;
 
 btnAutoConnect.onclick = function()
 {    
@@ -82,6 +138,7 @@ btnAutoConnect.onclick = function()
             // Reiniciar configuração
             alert("Remova a USB da Pelvware, feche este alerta e insira novamente.");
             startConfig = true;
+            configStatus = 0;
         }
         else{
             startConfig = false;
@@ -92,8 +149,9 @@ btnAutoConnect.onclick = function()
         firstCheck = true;
         counter = counterTimes;
         firstCheckValue = null;
-        btnAutoConnect.innerHTML = buttomConnectInner + " " + counterTimes + "s";
+        btnAutoConnect.innerHTML = buttonAutoConnectInner + " " + counterTimes + "s";
         
+        ssidSelecionado = null;
         btnAutoConnect.classList.add("active");
         btnAutoConnect.disabled = true;
         wifiList.style.display = "none";
@@ -128,7 +186,7 @@ async function verificarPortas(){
     
     let portsFound = await getPorts();
 
-    console.log(`Quantidade de portas encontradas: ${portsFound.length}`)
+    //console.log(`Quantidade de portas encontradas: ${portsFound.length}`)
 
     if( firstCheck ){
         firstCheckValue = portsFound.length;
@@ -161,7 +219,7 @@ async function verificarPortas(){
     {
         counter--;
 
-        btnAutoConnect.innerHTML = buttomConnectInner + " " + counter + "s";
+        btnAutoConnect.innerHTML = buttonAutoConnectInner + " " + counter + "s";
 
         if( counter == 0 ){
 
@@ -175,15 +233,15 @@ async function verificarPortas(){
 // Subscriber - assinante
 meuEvento.on('interromperBusca', (found, path) =>{
     
-    console.log("Ativou o Evento !")
+    //console.log("Ativou o Evento !")
             
-    btnAutoConnect.innerHTML = buttomConnectInner;
+    btnAutoConnect.innerHTML = buttonAutoConnectInner;
     btnAutoConnect.classList.remove("active");
     btnAutoConnect.disabled = false;
 
     if( found ){
 
-        alert(`Pelvware Encontrada, Iniciando Configuração da Porta: ${path}`)
+        //alert(`Pelvware Encontrada, Iniciando Configuração da Porta: ${path}`)
 
         pelvwarePort = new serialPort(path, { baudRate: pelvwareBaudRate });
 
@@ -192,13 +250,13 @@ meuEvento.on('interromperBusca', (found, path) =>{
         // The open event is always emitted
         pelvwarePort.on('open', function() 
         {
-            console.log("A porta foi aberta !");
+            //console.log("A porta foi aberta !");
 
             pelvwarePort.flush();
         
             parser.on('ready', () => {
 
-                console.log('Novo Dado Recebido !');
+                //console.log('Novo Dado Recebido !');
 
             });
 
@@ -225,25 +283,45 @@ meuEvento.on('interromperBusca', (found, path) =>{
                     case "SyncOK":
 
                         configStatus = 2;
-                        pelvwarePort.write('GetWifiList')
+                        
+                        setTimeout( () => {
+
+                            pelvwarePort.write('GetWifiList');
+
+                        }, 1000);
 
                     break;
 
                     case "ConnectionError":
 
-                        console.log("Falha na Conexão !");
+                        alert("Falha na conexão, verifique se a senha está correta!");
+                        pelvwarePort.write('GetWifiList')
 
                     break;
 
                     case "SSIDFormatError":
 
-                        console.log("Falha no formato do SSID !");
+                        alert("Falha na conexão, verifique se a senha está correta!");
+                        pelvwarePort.write('GetWifiList')
 
                     break;
 
                     case "SSIDOrPasswordError":
 
-                        console.log("Senha ou SSID Incorretos");
+                        alert("Falha na conexão, verifique se a senha está correta!");
+                        pelvwarePort.write('GetWifiList')
+
+                    break;
+
+                    case "ConectionTimeOut":
+
+                        // DO SOMETHING
+
+                    break;
+                    
+                    case "Connected":
+
+                        configStatus = 3;
 
                     break;
 
@@ -251,16 +329,22 @@ meuEvento.on('interromperBusca', (found, path) =>{
 
                         if( configStatus == 2 ){
 
+                            limparLista();
+
                             // TODO: Checa se isso aqui não vai dar problema
                             let ssidList = data.split(";");
                             let id = 0;
 
                             ssidList.forEach( ( ssid ) => {
 
-                                if( id == 0 )
+                                if( id == 0 ){
+                                    
                                     adicionaLinhaLista(ssid, true);
-                                else
+                                    ssidSelecionado = ssid;
+                                }
+                                else{
                                     adicionaLinhaLista(ssid, false);
+                                }
                                     
                                 id++;
 
@@ -271,8 +355,21 @@ meuEvento.on('interromperBusca', (found, path) =>{
                             divButtons.style.display = "block";
                             wifiList.style.display = "table";
                             loadingCircle.style.display = "none";
-                            console.log(ssidList);
+                            //console.log(ssidList);
                             
+                        }
+                        else if(configStatus == 3){
+
+                            pelvwareIP = data;
+                            console.log("Pelvware IP: " + pelvwareIP)
+
+                            configStatus = 4;
+
+                            // Disable all buttons here!
+                            disableAllButtons();
+                            loadingCircle.style.display = "none";
+                            finishLabel.style.display = "block";
+
                         }
                     
                     break;
@@ -289,7 +386,7 @@ meuEvento.on('interromperBusca', (found, path) =>{
 
     }
 
-    console.log("Limpando Intervalo !!")
+    //console.log("Limpando Intervalo !!")
     clearTimeout(tbuscaPorta);
 })
 

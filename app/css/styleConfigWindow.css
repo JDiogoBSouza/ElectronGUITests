@@ -3,6 +3,10 @@
   margin-left: 35%;
 }
 
+#finishConfig{
+  margin-top: 35%;
+}
+
 .loader {
     position: absolute;
     left: 35%;
@@ -29,3 +33,10 @@ li {
     100% { transform: rotate(360deg); }
 }
 
+.swal2-title {
+  font-size: 1.0rem !important;
+}
+
+.swal2-popup {
+  font-size: 0.8em !important;
+}

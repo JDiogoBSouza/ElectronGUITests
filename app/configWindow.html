@@ -38,13 +38,13 @@
                         <span class="icon icon-plus icon-text"></span>Auto-Connect
                     </button>        
 
-                  </div>
+                </div>
 
                 
                 <div class="btn-group pull-right">
 
 
-                    <button class="btn btn-default btn-dropdown pull-right">
+                    <button class="btn btn-default btn-dropdown pull-right" id="btn_ports">
                         <span class="icon icon-menu icon-text"></span>Portas
                     </button>
 
@@ -73,6 +73,7 @@
                     <div class="loader" id="loadingCircle" style="display: none;"></div>
 
                     <h3 style="text-align: center; display: none;" id="title">Redes sem fio encontradas</h3>
+                    <h2 style="text-align: center; display: none;" id="finishConfig">Configuração Finalizada !</h3>
 
                     <ul class="list-group" id="wifiList">
 
@@ -84,9 +85,6 @@
 
                     <div class="center" style="display: none" id="div_buttons">
                         
-                        <button class="btn btn-primary" id="btn_rescan">
-                            <span class="icon icon-arrows-ccw" style="color:white;"></span>
-                        </button>
                         <button class="btn btn-positive" id="btn_connect">Conectar</button>
 
                     </div>
