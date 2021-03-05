@@ -90,10 +90,10 @@ function createMainWindow () {
     mainWindow.show()
   })
 
-  //mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 }
 
-app.whenReady().then(createConfigWindow)
+app.whenReady().then(createMainWindow)
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

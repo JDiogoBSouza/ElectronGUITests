@@ -1,4 +1,8 @@
 const {ipcRenderer} = require('electron');
+const fs = require('fs')
+
+// Configuration file path
+const pelvConfig_path = './pelv.conf'
 
 // Mode buttons
 const btnRealTime = document.getElementById("btn_realTime");
@@ -73,6 +77,29 @@ btnMaximize.onclick = function()
     ipcRenderer.send('maximize-me');
 };
 
+// Check if configuration file exists and read
+try{
+
+    if( fs.existsSync(pelvConfig_path) ){
+
+        // If file exists, store to send messages.
+        const pelvwareIP = fs.readFileSync(pelvConfig_path, 'utf8')
+        console.log("IP da Pelvware: " + pelvwareIP);
+
+    }
+    else{
+        
+        // Open dialog here ?
+        console.log("Arquivo de configuração inexistente, primeira utilização !");
+
+    }
+}
+catch(e){
+
+    console.log("Erro ao procurar arquivo de configuração: " + e);
+
+}
+
 // Create Anychart graph
 
 var chartData = [];
@@ -112,7 +139,7 @@ anychart.onDocumentReady(function()
     //chart.xScroller().thumbs().hoverFill("#FFD700");
 
     // set chart title
-    chart.title("Top 5 pancake fillings");
+    chart.title("Pelvware Data");
 
     // initiate drawing the chart
     chart.draw();
@@ -136,7 +163,7 @@ anychart.onDocumentReady(function()
 
 var contador = 0;
 
-btnAddData.addEventListener('click', function(e) {
+btnConfigure.addEventListener('click', function(e) {
 
     ipcRenderer.send('openConfigOnMain');
     

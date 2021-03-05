@@ -3,6 +3,7 @@ const serialPort = require('serialport');
 const readline = require('@serialport/parser-readline');
 const {EventEmitter} = require('events');
 const ip = require('ip');
+const {writeFile} = require('fs') 
 
 class Evento extends EventEmitter{}
 const meuEvento = new Evento()
@@ -124,8 +125,7 @@ function singleSelect(li){
 
 btnClose.onclick = function()
 {
-    ipcRenderer.send('close-me');
-    //ipcRenderer.send('closeConfigStartMain');
+    ipcRenderer.send('closeConfigStartMain');
 };
 
 btnAutoConnect.onclick = function()
@@ -362,6 +362,7 @@ meuEvento.on('interromperBusca', (found, path) =>{
 
                             pelvwareIP = data;
                             console.log("Pelvware IP: " + pelvwareIP)
+                            storePelvIP(pelvwareIP);
 
                             configStatus = 4;
 
@@ -389,6 +390,15 @@ meuEvento.on('interromperBusca', (found, path) =>{
     //console.log("Limpando Intervalo !!")
     clearTimeout(tbuscaPorta);
 })
+
+function storePelvIP(pelvIP)
+{
+    writeFile("pelv.conf", pelvIP, (err) => {
+        if(err) throw err
+    
+        console.log('Arquivo criado com sucesso!');
+    })
+}
 
 async function getPorts(){
 
