@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/OboyDG/ElectronGUITests#readme",
   "devDependencies": {
-    "electron": "^10.1.4",
+    "electron": "^10.2.0",
     "electron-rebuild": "^2.3.2"
   },
   "dependencies": {
