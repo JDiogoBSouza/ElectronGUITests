@@ -6,4 +6,4 @@ Devido a utilização de uma versão da biblioteca serial-port desatualizada, é
 Para isso, utilizar os comandos abaixo na pasta raiz do projeto:
 
 1.  npm i
-2.  ./node_modules/.bin/electron-rebuild
+2.  .\node_modules\.bin\electron-rebuild
